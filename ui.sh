@@ -114,14 +114,23 @@ draw_ui() {
   print_section_name ""
 }
 
+exec 2>&1
+exec {STDIN}>&0
+exec {STDOUT}>&1
+exec {STDERR}>&2
+exec &>/dev/null
+exec 0>&-
+export STDOUT
+export STDIN
+export STDERR
+
 while true; do
   clear
-  draw_ui
-  read -n1 choice
+  draw_ui >&${STDOUT} 2>&1
+  read -n1 choice <&${STDIN}
   if [ "${commands["${choice}"]+isset}" ]; then
     clear
-    # stdbuf -i0 -oL -eL ${commands["${choice}"]} | print_wrapped_lines
     stdbuf -i0 -oL -eL ${commands["${choice}"]}
-    read -p "Press Enter to continue"
+    read -p "Press Enter to continue" >&${STDOUT} 2>&${STDERR} <&${STDIN}
   fi
 done
