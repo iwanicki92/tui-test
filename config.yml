@@ -1,0 +1,43 @@
+settings:
+  width: 40
+  border_char: "*"
+
+sections:
+  - name: Header
+    type: borderless
+    command: uname -a
+  - name: Hardware Information
+    type: static
+    elements:
+      - name: CPU
+        command: "cat /proc/cpuinfo | grep 'model name'"
+  - name: Firmware Information
+    type: static
+    elements:
+      - name: BIOS vendor
+        command: "cat /sys/class/dmi/id/bios_vendor"
+      - name: BIOS version
+        command: "cat /sys/class/dmi/id/bios_version"
+  - name: Software Information too long to fit into section border test one two three
+    type: static
+    elements:
+      - name: OS name
+        command: "cat /etc/os-release | sed -rn 's/^NAME=\"(.*)\"/\\1/p'"
+      - name: OS version
+        command: "cat /etc/os-release | sed -rn 's/^VERSION=\"(.*)\"/\\1/p'"
+  - name:
+    type: command
+    elements:
+      - name: Print a lot of information to UI + very long name description
+        command: "./print_to_screen.sh"
+  - name: Second command block
+    type: command
+    elements:
+      - name: Do nothing
+        command: "true"
+      - name: Invisible option
+        command: touch a && echo "dsad"
+        visible: "false"
+      - name: Visible option
+        command: ls -l /
+        visible: "echo 'Command will succeed and so this option will be visible'"
